@@ -99,22 +99,23 @@ const Answer: FC<AnswerProps> = ({
       resizeObserver.disconnect()
     }
   }, [])
+  const isDebug = window.location.search.includes('debug=1')
 
   return (
     <div className='flex mb-2 last:mb-0'>
-      <div className='shrink-0 relative w-10 h-10'>
+      {!isDebug && <div className='shrink-0 relative w-10 h-10'>
         {answerIcon || <AnswerIcon />}
         {responding && (
           <div className='absolute -top-[3px] -left-[3px] pl-[6px] flex items-center w-4 h-4 bg-white rounded-full shadow-xs border-[0.5px] border-gray-50'>
             <LoadingAnim type='avatar' />
           </div>
         )}
-      </div>
-      <div className='chat-answer-container group grow w-0 ml-4' ref={containerRef}>
-        <div className={cn('group relative pr-10', chatAnswerContainerInner)}>
+      </div>}
+      <div className={`chat-answer-container group grow w-0 ${isDebug ? '' : 'ml-4'}`} ref={containerRef}>
+        <div className={cn(`group relative${isDebug ? '' : ' pr-10'}`, chatAnswerContainerInner)}>
           <div
             ref={contentRef}
-            className={cn('relative inline-block px-4 py-3 max-w-full bg-chat-bubble-bg rounded-2xl body-lg-regular text-text-primary', workflowProcess && 'w-full')}
+            className={cn(`relative inline-block py-3 max-w-full bg-chat-bubble-bg rounded-2xl body-lg-regular text-text-primary${isDebug ? '' : ' px-4 '}`, workflowProcess && 'w-full')}
           >
             {
               !responding && (

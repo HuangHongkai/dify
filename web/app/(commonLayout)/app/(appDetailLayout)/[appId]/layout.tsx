@@ -48,6 +48,7 @@ const AppDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
     setAppDetail: state.setAppDetail,
     setAppSiderbarExpand: state.setAppSiderbarExpand,
   })))
+  const isDebug = window.location.search.includes('debug=1');
   const [isLoadingAppDetail, setIsLoadingAppDetail] = useState(false)
   const [appDetailRes, setAppDetailRes] = useState<App | null>(null)
   const [navigation, setNavigation] = useState<Array<{
@@ -162,7 +163,7 @@ const AppDetailLayout: FC<IAppDetailLayoutProps> = (props) => {
 
   return (
     <div className={cn(s.app, 'flex relative', 'overflow-hidden')}>
-      {appDetail && (
+      {!isDebug && appDetail && (
         <AppSideBar title={appDetail.name} icon={appDetail.icon} icon_background={appDetail.icon_background as string} desc={appDetail.mode} navigation={navigation} />
       )}
       <div className="bg-components-panel-bg grow overflow-hidden">

@@ -51,6 +51,7 @@ const OPTION_MAP = {
 <style>
   #dify-chatbot-bubble-button {
     background-color: ${primaryColor} !important;
+    display: none;
   }
   #dify-chatbot-bubble-window {
     width: 24rem !important;

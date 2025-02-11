@@ -39,9 +39,20 @@ const LogAnnotation: FC<Props> = ({
       </div>
     )
   }
+  const isDebug = window.location.search.includes('debug=1')
 
   return (
     <div className='pt-3 px-6 h-full flex flex-col'>
+      {isDebug && <a href="/app/bc880743-850a-44e5-b073-9bf6ef4719f0/configuration?debug=1" style={{
+        color: '#3498db',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        transition: 'all 0.3s',
+        display: 'inline-block',
+        marginBottom: '8px',
+      }}>
+        大模型对话
+      </a>}
       {appDetail.mode !== 'workflow' && (
         <TabSlider
           className='shrink-0'

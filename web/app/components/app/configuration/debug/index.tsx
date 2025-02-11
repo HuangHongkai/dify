@@ -392,7 +392,18 @@ const Debug: FC<IDebug> = ({
     <>
       <div className="shrink-0">
         <div className='flex items-center justify-between px-4 pt-3 pb-2'>
-          <div className='text-text-primary system-xl-semibold'>{t('appDebug.inputs.title')}</div>
+          <div className='text-text-primary system-xl-semibold'>
+            {/*{t('appDebug.inputs.title')}*/}
+            <a href="/app/bc880743-850a-44e5-b073-9bf6ef4719f0/logs?debug=1" style={{
+              color: '#3498db',
+              textDecoration: 'none',
+              fontWeight: 'bold',
+              transition: 'all 0.3s',
+              display: 'inline-block'
+            }}>
+              历史记录
+            </a>
+          </div>
           <div className='flex items-center'>
             {
               debugWithMultipleModel
@@ -457,7 +468,7 @@ const Debug: FC<IDebug> = ({
       </div>
       {
         debugWithMultipleModel && (
-          <div className='grow mt-3 overflow-hidden' ref={ref}>
+          <div className='grow overflow-hidden' ref={ref}>
             <DebugWithMultipleModel
               multipleModelConfigs={multipleModelConfigs}
               onMultipleModelConfigsChange={onMultipleModelConfigsChange}

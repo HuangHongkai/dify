@@ -102,10 +102,10 @@ def build_from_mappings(
         # If image config is set.
         and config.image_config
         # And the number of image files exceeds the maximum limit
-        and sum(1 for _ in (filter(lambda x: x.type == FileType.IMAGE, files))) > config.image_config.number_limits
+        and sum(1 for _ in (filter(lambda x: x.type == FileType.IMAGE, files))) > 50
     ):
         raise ValueError(f"Number of image files exceeds the maximum limit {config.image_config.number_limits}")
-    if config and config.number_limits and len(files) > config.number_limits:
+    if config and config.number_limits and len(files) > 50:
         raise ValueError(f"Number of files exceeds the maximum limit {config.number_limits}")
 
     return files

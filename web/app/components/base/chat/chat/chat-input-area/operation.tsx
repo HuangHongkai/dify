@@ -1,4 +1,4 @@
-import {
+import React, {
   forwardRef,
   memo,
 } from 'react'
@@ -15,6 +15,10 @@ import ActionButton from '@/app/components/base/action-button'
 import { FileUploaderInChatInput } from '@/app/components/base/file-uploader'
 import type { FileUpload } from '@/app/components/base/features/types'
 import cn from '@/utils/classnames'
+import {RefreshCcw01} from "@/app/components/base/icons/src/vender/line/arrows";
+import {APP_CHAT_WITH_MULTIPLE_MODEL_RESTART} from "@/app/components/app/configuration/debug/types";
+import {useEventEmitterContextContext} from "@/context/event-emitter";
+import TooltipPlus from '@/app/components/base/tooltip'
 
 type OperationProps = {
   fileConfig?: FileUpload
@@ -30,6 +34,13 @@ const Operation = forwardRef<HTMLDivElement, OperationProps>(({
   onSend,
   theme,
 }, ref) => {
+  const { eventEmitter } = useEventEmitterContextContext()
+  const clearConversation = async () => {
+    eventEmitter?.emit({
+      type: APP_CHAT_WITH_MULTIPLE_MODEL_RESTART,
+    } as any)
+  }
+
   return (
     <div
       className={cn(
@@ -41,6 +52,13 @@ const Operation = forwardRef<HTMLDivElement, OperationProps>(({
         ref={ref}
       >
         <div className='flex items-center space-x-1'>
+          <TooltipPlus
+            popupContent={'发起新对话'}
+          >
+            <ActionButton onClick={clearConversation}>
+              <RefreshCcw01 className='w-4 h-4' />
+            </ActionButton>
+          </TooltipPlus>
           {fileConfig?.enabled && <FileUploaderInChatInput fileConfig={fileConfig} />}
           {
             speechToTextConfig?.enabled && (

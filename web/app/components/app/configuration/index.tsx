@@ -102,7 +102,8 @@ const Configuration: FC = () => {
   const [conversationId, setConversationId] = useState<string | null>('')
 
   const media = useBreakpoints()
-  const isMobile = media === MediaType.mobile
+  const isDebug = window.location.search.includes('debug=1');
+  const isMobile = media === MediaType.mobile && !isDebug;
   const [isShowDebugPanel, { setTrue: showDebugPanel, setFalse: hideDebugPanel }] = useBoolean(false)
 
   const [introduction, setIntroduction] = useState<string>('')
@@ -871,18 +872,18 @@ const Configuration: FC = () => {
       <FeaturesProvider features={featuresData}>
         <>
           <div className="flex flex-col h-full">
-            <div className='relative flex grow h-[200px] pt-14'>
+            <div className={'relative flex grow h-[200px] ' + (debugWithMultipleModel ? '' : 'pt-14')}>
               {/* Header */}
-              <div className='absolute top-0 left-0 w-full bg-white h-14'>
+              {!debugWithMultipleModel && <div className='absolute top-0 left-0 w-full bg-white h-14'>
                 <div className='flex items-center justify-between px-6 h-14'>
-                  <div className='flex items-center'>
+                  {!isDebug && <div className='flex items-center'>
                     <div className='text-base font-semibold leading-6 text-gray-900'>{t('appDebug.orchestrate')}</div>
                     <div className='flex items-center h-[14px] space-x-1 text-xs'>
                       {isAdvancedMode && (
                         <div className='ml-1 flex items-center h-5 px-1.5 border border-gray-100 rounded-md text-[11px] font-medium text-gray-500 uppercase'>{t('appDebug.promptMode.advanced')}</div>
                       )}
                     </div>
-                  </div>
+                  </div>}
                   <div className='flex items-center'>
                     {/* Agent Setting */}
                     {isAgent && (
@@ -924,6 +925,7 @@ const Configuration: FC = () => {
                         <CodeBracketIcon className="w-4 h-4 text-gray-500" />
                       </Button>
                     )}
+                    {!isDebug &&
                     <AppPublisher {...{
                       publishDisabled: cannotPublish,
                       publishedAt: (latestPublishedAt || 0) * 1000,
@@ -933,12 +935,13 @@ const Configuration: FC = () => {
                       publishedConfig: publishedConfig!,
                       resetAppConfig: () => syncToPublishedConfig(publishedConfig!),
                     }} />
+                    }
                   </div>
                 </div>
-              </div>
-              <div className={`w-full sm:w-1/2 shrink-0 flex flex-col h-full ${debugWithMultipleModel && 'max-w-[560px]'}`}>
+              </div> }
+              {!isDebug && <div className={`w-full sm:w-1/2 shrink-0 flex flex-col h-full ${debugWithMultipleModel && 'max-w-[560px]'}`}>
                 <Config />
-              </div>
+              </div>}
               {!isMobile && <div className="relative flex flex-col w-1/2 h-full overflow-y-auto grow " style={{ borderColor: 'rgba(0, 0, 0, 0.02)' }}>
                 <div className='grow flex flex-col border-t-[0.5px] border-l-[0.5px] rounded-tl-2xl border-components-panel-border bg-chatbot-bg '>
                   <Debug

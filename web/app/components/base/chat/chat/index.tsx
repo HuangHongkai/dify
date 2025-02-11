@@ -124,8 +124,8 @@ const Chat: FC<ChatProps> = ({
   const userScrolledRef = useRef(false)
 
   const handleScrollToBottom = useCallback(() => {
-    if (chatList.length > 1 && chatContainerRef.current && !userScrolledRef.current)
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    // if (chatList.length > 1 && chatContainerRef.current && !userScrolledRef.current)
+    //   chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
   }, [chatList.length])
 
   const handleWindowResize = useCallback(() => {
@@ -138,11 +138,11 @@ const Chat: FC<ChatProps> = ({
     if (chatContainerInnerRef.current && chatFooterInnerRef.current)
       chatFooterInnerRef.current.style.width = `${chatContainerInnerRef.current.clientWidth}px`
   }, [])
-
-  useEffect(() => {
-    handleScrollToBottom()
-    handleWindowResize()
-  }, [handleScrollToBottom, handleWindowResize])
+  //
+  // useEffect(() => {
+  //   handleScrollToBottom()
+  //   handleWindowResize()
+  // }, [handleScrollToBottom, handleWindowResize])
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -158,36 +158,36 @@ const Chat: FC<ChatProps> = ({
     return () => window.removeEventListener('resize', handleWindowResize)
   }, [handleWindowResize])
 
-  useEffect(() => {
-    if (chatFooterRef.current && chatContainerRef.current) {
-      const resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const { blockSize } = entry.borderBoxSize[0]
+  // useEffect(() => {
+  //   if (chatFooterRef.current && chatContainerRef.current) {
+  //     const resizeObserver = new ResizeObserver((entries) => {
+  //       for (const entry of entries) {
+  //         const { blockSize } = entry.borderBoxSize[0]
+  //
+  //         chatContainerRef.current!.style.paddingBottom = `${blockSize}px`
+  //         handleScrollToBottom()
+  //       }
+  //     })
+  //
+  //     resizeObserver.observe(chatFooterRef.current)
+  //
+  //     return () => {
+  //       resizeObserver.disconnect()
+  //     }
+  //   }
+  // }, [handleScrollToBottom])
 
-          chatContainerRef.current!.style.paddingBottom = `${blockSize}px`
-          handleScrollToBottom()
-        }
-      })
-
-      resizeObserver.observe(chatFooterRef.current)
-
-      return () => {
-        resizeObserver.disconnect()
-      }
-    }
-  }, [handleScrollToBottom])
-
-  useEffect(() => {
-    const chatContainer = chatContainerRef.current
-    if (chatContainer) {
-      const setUserScrolled = () => {
-        if (chatContainer)
-          userScrolledRef.current = chatContainer.scrollHeight - chatContainer.scrollTop >= chatContainer.clientHeight + 300
-      }
-      chatContainer.addEventListener('scroll', setUserScrolled)
-      return () => chatContainer.removeEventListener('scroll', setUserScrolled)
-    }
-  }, [])
+  // useEffect(() => {
+  //   const chatContainer = chatContainerRef.current
+  //   if (chatContainer) {
+  //     const setUserScrolled = () => {
+  //       if (chatContainer)
+  //         userScrolledRef.current = chatContainer.scrollHeight - chatContainer.scrollTop >= chatContainer.clientHeight + 300
+  //     }
+  //     chatContainer.addEventListener('scroll', setUserScrolled)
+  //     return () => chatContainer.removeEventListener('scroll', setUserScrolled)
+  //   }
+  // }, [])
 
   const hasTryToAsk = config?.suggested_questions_after_answer?.enabled && !!suggestedQuestions?.length && onSend
 
@@ -210,6 +210,7 @@ const Chat: FC<ChatProps> = ({
         <div
           ref={chatContainerRef}
           className={cn('relative h-full overflow-y-auto overflow-x-hidden', chatContainerClassName)}
+          style={{ paddingLeft: '0.5rem' }}
         >
           {chatNode}
           <div

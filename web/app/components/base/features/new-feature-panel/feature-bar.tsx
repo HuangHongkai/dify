@@ -24,6 +24,7 @@ const FeatureBar = ({
   const { t } = useTranslation()
   const features = useFeatures(s => s.features)
   const [modalOpen, setModalOpen] = useState(false)
+  const isDebug = window.location.search.includes('debug=1')
 
   const noFeatureEnabled = useMemo(() => {
     // completion app citation is always true but not enabled for setting
@@ -36,6 +37,7 @@ const FeatureBar = ({
   }, [features, isChatMode, showFileUpload])
 
   return (
+    !isDebug &&
     <div className='-translate-y-2 m-1 mt-0 px-2.5 py-2 pt-4 bg-util-colors-indigo-indigo-50 rounded-b-[10px] border-l border-b border-r border-components-panel-border-subtle'>
       {noFeatureEnabled && (
         <div className='flex items-end gap-1 cursor-pointer' onClick={() => onFeatureBarClick?.(true)}>

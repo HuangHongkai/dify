@@ -242,7 +242,7 @@ const Link = ({ node, ...props }: any) => {
 export function Markdown(props: { content: string; className?: string }) {
   const latexContent = flow([
     preprocessThinkTag,
-    preprocessLaTeX,
+    // preprocessLaTeX,
   ])(props.content)
   return (
     <div className={cn(props.className, 'markdown-body')}>

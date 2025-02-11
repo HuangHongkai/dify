@@ -4,12 +4,38 @@ server {
     listen ${NGINX_PORT};
     server_name ${NGINX_SERVER_NAME};
 
+    location = /inner/console/api/apps/bc880743-850a-44e5-b073-9bf6ef4719f0/chat-messages {
+        # 去掉/inner前缀，转发到api:5001
+        proxy_pass http://api:5001/console/api/apps/bc880743-850a-44e5-b073-9bf6ef4719f0/chat-messages;
+        include proxy.conf;
+    }
+
+    location = /console/api/apps/bc880743-850a-44e5-b073-9bf6ef4719f0/chat-messages {
+        # proxy_pass http://api:5001;
+        proxy_pass http://host.docker.internal:3200;
+        include proxy.conf;
+    }
+
+    location /favicon.ico {
+      add_header Cache-Control "public, max-age=31536000, immutable";
+      proxy_pass http://web:3000;
+      include proxy.conf;
+    }
+
+    location /app/bc880743-850a-44e5-b073-9bf6ef4719f0/configuration {
+      add_header Cache-Control "public, max-age=31536000, immutable";
+      proxy_pass http://web:3000;
+      include proxy.conf;
+    }
+
     location /console/api {
+      add_header Cache-Control "public, max-age=31536000, immutable";
       proxy_pass http://api:5001;
       include proxy.conf;
     }
 
     location /api {
+      add_header Cache-Control "public, max-age=31536000, immutable";
       proxy_pass http://api:5001;
       include proxy.conf;
     }
@@ -27,6 +53,28 @@ server {
     location / {
       proxy_pass http://web:3000;
       include proxy.conf;
+    }
+
+    location /storage/ {
+        alias /storage/;
+        autoindex on;  # 允许目录列表
+        autoindex_exact_size off;  # 显示文件大小以易读的格式
+        autoindex_localtime on;  # 使用本地时间显示文件修改时间
+
+        # 允许流式播放视频
+        types {
+            video/mp4 mp4;
+            video/webm webm;
+            video/ogg ogv;
+            text/html html;
+        }
+
+        # 允许查看图片
+        types {
+            image/jpeg jpg jpeg;
+            image/png png;
+            image/gif gif;
+        }
     }
 
     # placeholder for acme challenge location
