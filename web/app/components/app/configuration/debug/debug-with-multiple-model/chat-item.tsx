@@ -16,7 +16,7 @@ import {
 import Chat from '@/app/components/base/chat/chat'
 import { useChat } from '@/app/components/base/chat/chat/hooks'
 import { useDebugConfigurationContext } from '@/context/debug-configuration'
-import type { ChatConfig, OnSend } from '@/app/components/base/chat/types'
+import type {ChatConfig, ChatItem, ChatItemInTree, OnSend} from '@/app/components/base/chat/types'
 import { useEventEmitterContextContext } from '@/context/event-emitter'
 import { useProviderContext } from '@/context/provider-context'
 import {
@@ -29,7 +29,7 @@ import { useAppContext } from '@/context/app-context'
 import { ModelFeatureEnum } from '@/app/components/header/account-setting/model-provider-page/declarations'
 import { useFeatures } from '@/app/components/base/features/hooks'
 import type { InputForm } from '@/app/components/base/chat/chat/type'
-import { getLastAnswer } from '@/app/components/base/chat/utils'
+import {getLastAnswer, isValidGeneratedAnswer} from '@/app/components/base/chat/utils'
 
 type ChatItemProps = {
   modelAndParameter: ModelAndParameter
@@ -82,9 +82,9 @@ const ChatItem: FC<ChatItemProps> = ({
   )
   useFormattingChangedSubscription(chatList)
 
-  const doSend: OnSend = useCallback((message, files) => {
-    const currentProvider = textGenerationModelList.find(item => item.provider === modelAndParameter.provider)
-    const currentModel = currentProvider?.models.find(model => model.model === modelAndParameter.model)
+  const doSend: OnSend = useCallback((message, files, isRegenerate = false, parentAnswer: ChatItem | null = null) => {
+    const currentProvider = textGenerationModelList.find(item => item.provider === modelConfig.provider)
+    const currentModel = currentProvider?.models.find(model => model.model === modelConfig.model_id)
     const supportVision = currentModel?.features?.includes(ModelFeatureEnum.vision)
 
     const configData = {
@@ -101,7 +101,7 @@ const ChatItem: FC<ChatItemProps> = ({
       query: message,
       inputs,
       model_config: configData,
-      parent_message_id: getLastAnswer(chatList)?.id || null,
+      parent_message_id: (isRegenerate ? parentAnswer?.id : getLastAnswer(chatList)?.id) || null,
     }
 
     if ((config.file_upload as any).enabled && files?.length && supportVision)
@@ -116,6 +116,14 @@ const ChatItem: FC<ChatItemProps> = ({
       },
     )
   }, [appId, chatList, config, handleSend, inputs, modelAndParameter.model, modelAndParameter.parameters, modelAndParameter.provider, textGenerationModelList])
+
+
+  const doRegenerate = useCallback((chatItem: ChatItemInTree) => {
+    console.log('regenerate')
+    const question = chatList.find(item => item.id === chatItem.parentMessageId)!
+    const parentAnswer = chatList.find(item => item.id === question.parentMessageId)
+    doSend(question.content, question.message_files, true, isValidGeneratedAnswer(parentAnswer) ? parentAnswer : null)
+  }, [chatList, doSend])
 
   const { eventEmitter } = useEventEmitterContextContext()
   eventEmitter?.useSubscription((v: any) => {
@@ -147,6 +155,7 @@ const ChatItem: FC<ChatItemProps> = ({
       chatFooterClassName='p-4 pb-0'
       suggestedQuestions={suggestedQuestions}
       onSend={doSend}
+      onRegenerate={doRegenerate}
       showPromptLog
       questionIcon={<Avatar avatar={userProfile.avatar_url} name={userProfile.name} size={40} />}
       allToolIcons={allToolIcons}

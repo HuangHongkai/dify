@@ -67,7 +67,7 @@ const DebugItem: FC<DebugItemProps> = ({
   return (
     <div
       className={`flex flex-col min-w-[320px] rounded-xl bg-white border-[0.5px] border-black/5 ${className}`}
-      style={Object.assign(style, isDebug ? (isMobile ? { minWidth: '97%', left: '0.5rem' } : { left: '0.5rem' }) : {})}
+      style={Object.assign(Object.assign({}, style), isDebug ? (isMobile ? { minWidth: '97%', left: '0.5rem' } : { left: '0.5rem' }) : {})}
     >
       <div className='shrink-0 flex items-center justify-between h-10 px-3 border-b-[0.5px] border-b-black/5'>
         <div className='flex items-center justify-center w-6 h-5 font-medium italic text-gray-500'>

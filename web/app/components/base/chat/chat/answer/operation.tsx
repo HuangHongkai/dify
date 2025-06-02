@@ -164,7 +164,7 @@ const Operation: FC<OperationProps> = ({
           )
         }
         {
-          !isOpeningStatement && !noChatInput && <RegenerateBtn className='hidden group-hover:block mr-1' onClick={() => onRegenerate?.(item)} />
+          <RegenerateBtn className='hidden group-hover:block mr-1' onClick={() => onRegenerate?.(item)} />
         }
         {
           config?.supportFeedback && !localFeedback?.rating && onFeedback && !isOpeningStatement && (

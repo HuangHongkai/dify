@@ -153,7 +153,7 @@ const DebugWithMultipleModel = () => {
   return (
     <div className='flex flex-col h-full'>
       <div
-        className={`grow mb-3 relative overflow-auto${isDebug ? '' : ' px-6'}`}
+        className={`grow relative overflow-auto${isDebug ? '' : ' px-6'}`}
         style={{ height: isChatMode ? 'calc(100% - 60px)' : '100%' }}
       >
         {

@@ -542,6 +542,7 @@ export const ssePost = (
         onData?.(str, isFirstMessage, moreInfo)
       }, onCompleted, onThought, onMessageEnd, onMessageReplace, onFile, onWorkflowStarted, onWorkflowFinished, onNodeStarted, onNodeFinished, onIterationStart, onIterationNext, onIterationFinish, onNodeRetry, onParallelBranchStarted, onParallelBranchFinished, onTextChunk, onTTSChunk, onTTSEnd, onTextReplace)
     }).catch((e) => {
+      console.log('发生异常', e)
       if (e.toString() !== 'AbortError: The user aborted a request.')
         Toast.notify({ type: 'error', message: e })
       onError?.(e)

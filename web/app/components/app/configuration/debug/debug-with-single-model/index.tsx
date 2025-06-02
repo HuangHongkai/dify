@@ -126,6 +126,7 @@ const DebugWithSingleModel = forwardRef<DebugWithSingleModelRefType, DebugWithSi
   }, [appId, chatList, checkCanSend, completionParams, config, handleSend, inputs, modelConfig.mode, modelConfig.model_id, modelConfig.provider, textGenerationModelList])
 
   const doRegenerate = useCallback((chatItem: ChatItemInTree) => {
+    console.log('single regnerate')
     const question = chatList.find(item => item.id === chatItem.parentMessageId)!
     const parentAnswer = chatList.find(item => item.id === question.parentMessageId)
     doSend(question.content, question.message_files, true, isValidGeneratedAnswer(parentAnswer) ? parentAnswer : null)
